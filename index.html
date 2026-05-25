@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Me amas? ❤️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Fredoka:wght@500;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- ESTILOS GENERALES --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #ffffff; /* Fondo blanco */
+            font-family: 'Quicksand', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- MARCO DE CORAZONES ROJOS --- */
+        .contenedor-principal {
+            width: 90vw;
+            height: 90vh;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            
+            /* Borde simulando corazones rojos o puntos encendidos */
+            border: 12px solid #ff0000;
+            border-style: dotted;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        /* Decoración de esquinas de corazón */
+        .decoracion-corazon {
+            position: absolute;
+            font-size: 40px;
+            color: #ff0000;
+            user-select: none;
+            animation: latido 1.2s infinite alternate;
+        }
+        .top-left { top: 15px; left: 15px; }
+        .top-right { top: 15px; right: 15px; }
+        .bottom-left { bottom: 15px; left: 15px; }
+        .bottom-right { bottom: 15px; right: 15px; }
+
+        @keyframes latido {
+            to { transform: scale(1.1); }
+        }
+
+        /* --- PILA DE FOTOS ESTILO POLAROID --- */
+        .contenedor-fotos {
+            position: relative;
+            width: 320px;
+            height: 400px;
+            margin-bottom: 20px;
+            z-index: 10;
+        }
+
+        .polaroid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            padding: 15px 15px 50px 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border: 1px solid #eaeaea;
+            border-radius: 4px;
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+
+        .polaroid .texto-foto {
+            text-align: center;
+            font-family: 'Courier Prime', monospace; /* Toque estilo código */
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 15px;
+            color: #ff3333;
+        }
+
+        /* Rotaciones iniciales de la pila */
+        .p1 { transform: rotate(-5deg); z-index: 4; }
+        .p2 { transform: rotate(4deg); z-index: 3; }
+        .p3 { transform: rotate(-2deg); z-index: 2; }
+        .p4 { transform: rotate(6deg); z-index: 1; }
+
+        /* --- INTERFAZ DE PREGUNTA --- */
+        #bloque-pregunta {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.6s ease;
+            text-align: center;
+            display: none;
+        }
+
+        .pregunta-activa {
+            display: block !important;
+            opacity: 1 !important;
+            transform: scale(1) !important;
+        }
+
+        h1 {
+            font-family: 'Fredoka', cursive;
+            color: #ff0000;
+            font-size: 50px;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+        }
+
+        .zona-botones {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            min-height: 100px;
+        }
+
+        .btn {
+            font-family: 'Fredoka', cursive;
+            font-size: 24px;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-si {
+            background-color: #ff0000;
+            color: white;
+            box-shadow: 0 6px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .btn-si:hover {
+            transform: scale(1.1);
+        }
+
+        .btn-no {
+            background-color: #f0f0f0;
+            color: #555555;
+            position: relative;
+        }
+
+        /* --- PANTALLA DE ÉXITO FINAL --- */
+        #pantalla-final {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .mensaje-final {
+            font-family: 'Fredoka', cursive;
+            color: #ff0000;
+            font-size: 60px;
+            animation: latido 0.8s infinite alternate;
+        }
+
+        /* --- LLUVIA DE CORAZONES --- */
+        .corazon-confeti {
+            position: fixed;
+            color: #ff0000;
+            font-size: 28px;
+            user-select: none;
+            pointer-events: none;
+            z-index: 100;
+            animation: caer 3s linear forwards;
+        }
+
+        @keyframes caer {
+            0% {
+                transform: translateY(-50px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(105vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="decoracion-corazon top-left">❤️</div>
+    <div class="decoracion-corazon top-right">❤️</div>
+    <div class="decoracion-corazon bottom-left">❤️</div>
+    <div class="decoracion-corazon bottom-right">❤️</div>
+
+    <div class="contenedor-principal">
+
+        <div class="contenedor-fotos" id="pila" onclick="quitarFoto()">
+            <div class="polaroid p1">
+                <img src="foto1.jpg" alt="Foto 1">
+                <div class="texto-foto">click_para_quitar.js ❤️</div>
+            </div>
+            <div class="polaroid p2">
+                <img src="foto2.jpg" alt="Foto 2">
+                <div class="texto-foto">nuestros_momentos.jpg</div>
+            </div>
+            <div class="polaroid p3">
+                <img src="foto3.jpg" alt="Foto 3">
+                <div class="texto-foto">contigo_es_mejor.png</div>
+            </div>
+            <div class="polaroid p4">
+                <img src="foto4.jpg" alt="Foto 4">
+                <div class="texto-foto">casi_llegamos... ✨</div>
+            </div>
+        </div>
+
+        <div id="bloque-pregunta">
+            <h1 id="texto-pregunta">¿Me amas?</h1>
+            <div class="zona-botones">
+                <button class="btn btn-si" id="btn-si" onclick="aceptarAmor()">¡SÍ! ❤️</button>
+                <button class="btn btn-no" id="btn-no" onclick="rechazarAmor()">No</button>
+            </div>
+        </div>
+
+        <div id="pantalla-final">
+            <div class="mensaje-final">¡Yo te amo más! ❤️✨</div>
+        </div>
+
+    </div>
+
+    <script>
+        let fotosQuitadas = 0;
+        const totalFotos = 4;
+        
+        const respuestasNo = [
+            "¿Seguro? 🥺",
+            "¡Piénsalo bien! 💔",
+            "¿Ni un poquito? 😭",
+            "A ver, intenta otra vez... 😤",
+            "¡Que me digas que sí! 👀",
+            "Obligado a amar 💖"
+        ];
+        let indiceNo = 0;
+
+        function quitarFoto() {
+            const pila = document.getElementById('pila');
+            const fotos = pila.getElementsByClassName('polaroid');
+            
+            if (fotosQuitadas < totalFotos) {
+                const lado = fotosQuitadas % 2 === 0 ? 600 : -600;
+                
+                fotos[0].style.transform = `translate(${lado}px, 50px) rotate(${lado / 20}deg)`;
+                fotos[0].style.opacity = '0';
+                
+                const fotoActual = fotos[0];
+                setTimeout(() => {
+                    fotoActual.remove();
+                }, 600);
+
+                fotosQuitadas++;
+            }
+
+            if (fotosQuitadas === totalFotos) {
+                setTimeout(() => {
+                    document.getElementById('pila').style.display = 'none';
+                    document.getElementById('bloque-pregunta').classList.add('pregunta-activa');
+                }, 400);
+            }
+        }
+
+        function rechazarAmor() {
+            const btnNo = document.getElementById('btn-no');
+            const btnSi = document.getElementById('btn-si');
+            const textoPregunta = document.getElementById('texto-pregunta');
+
+            if (indiceNo < respuestasNo.length) {
+                btnNo.innerText = respuestasNo[indiceNo];
+                
+                const tamañoActual = parseFloat(window.getComputedStyle(btnSi).fontSize);
+                btnSi.style.fontSize = (tamañoActual + 12) + "px";
+                btnSi.style.padding = `${tamañoActual / 2}px ${tamañoActual * 1.5}px`;
+                
+                indiceNo++;
+            } else {
+                btnNo.style.display = 'none';
+            }
+        }
+
+        function aceptarAmor() {
+            document.getElementById('bloque-pregunta').style.display = 'none';
+            document.getElementById('pantalla-final').style.display = 'flex';
+
+            for (let i = 0; i < 80; i++) {
+                setTimeout(crearCorazonConfeti, i * 60);
+            }
+        }
+
+        function crearCorazonConfeti() {
+            const corazon = document.createElement('div');
+            corazon.classList.add('corazon-confeti');
+            corazon.innerText = '❤️';
+            corazon.style.left = Math.random() * 100 + 'vw';
+            corazon.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+            corazon.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            
+            document.body.appendChild(corazon);
+
+            setTimeout(() => {
+                corazon.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
